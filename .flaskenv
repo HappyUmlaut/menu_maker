@@ -1,0 +1,1 @@
+FLASK_APP=menu_maker.py
