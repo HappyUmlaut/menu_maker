@@ -1,0 +1,10 @@
+#user-button{
+  background-image: url("/static/images/user.png");
+  background-repeat: no-repeat;
+  background-size: 48px;
+  background-position: center;
+  height: 64px;
+  width: 64px;
+  border: 0;
+  background-color: transparent;
+}
