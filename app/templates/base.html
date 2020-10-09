@@ -5,26 +5,59 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <meta charset="UTF-8">
     <meta name="description" content="Menu maker web app">
-    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">Menu Maker</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar navbar-light primary-bg">
+      <a class="navbar-brand" href="/">
+        <span class="text-color">
+          Menu Maker
+        </span>
+      </a>
+      <button class="navbar-toggler" id="dark-border" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/recipes">Your recipes</a>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="/recipes">
+              <span class="text-color">
+                Your recipes
+              </span>
+            </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/new_menu">Create a menu</a>
+          <li class="nav-item menu-items">
+            <a class="text-color nav-link" href="/new_menu">
+              <span class="text-color">
+                Create a menu
+              </span>
+            </a>
           </li>
         </ul>
-        <button class="form-inline" id="user-button">{% block buttons_content %}{% endblock %}</button>
+        {% if not current_user.is_authenticated %}
+        <div class="wraper">
+          <form action="/login">
+            <button class="text-color form-inline btn btn-primary" id="login-btn">
+              Log In
+            </button>
+          </form>
+          <form action="/register">
+            <button class="text-color btn btn-secondary" id="register-btn">
+              Register
+            </button>
+          </form>
+        </div>
+        {% else %}
+        <form action="/logout">
+          <button class="text-color" id="user-banner">
+              Log Out
+          </div>
+          <button class="form-inline loged_user_button">
+            {% block buttons_content %}{% endblock %}
+          </button>
+        </form>
+        {% endif %}
       </div>
     </nav>
     {% block content %}

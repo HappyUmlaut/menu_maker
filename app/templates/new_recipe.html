@@ -1,7 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
+  <h1>
+    Create a new recipe
+  </h1>
+  <form class="center-form h2">
+    <div id="blink-container">
+      <input type="text" id="recipe-name" name="recipe-name" 
+      placeholder="Vegan curry"> <span class="blink" id="blinker">|</span>
+    </div>
+  </form>
+  <h2 class="center-form">
+    Add a new ingredient
+  </h2>
+  <form class="center-form">
+    <input type="number" min="0" max="500" id="quantity" name="quantity" 
+    placeholder="6" size="3" required>
+    <input type="text" id="ingredient" name="ingredient" placeholder="tomatoes" 
+    pattern="[A-Za-z]*" required>
+  </form>
   <p>
-    Looks like there is nothing here yet!
+
   </p>
+  <script>
+    input = document.getElementById('recipe-name');
+    blinker = document.getElementById('blinker');
+    console.log(input.value);
+    input.addEventListener("focusin", removeBlink);
+    
+    input.addEventListener("focusout", addBlink);
+    
+    function addBlink() {
+      if (input.value === ''){
+        blinker.classList.remove('hide');
+      }
+    }; 
+    
+    function removeBlink(){
+      blinker.classList.add('hide');
+    }; 
+  </script>
 {% endblock %}

@@ -8,6 +8,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    recipes = db.relationship('Ingredient', backref='user', lazy=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)    
@@ -21,3 +22,13 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+class Ingredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_name = db.Column(db.String(120), unique=True, nullable=False)
+    ingredient_name = db.Column(db.String(120), unique=True, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False, default=1)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return '<Ingredient %r>' % self.ingredient_name
