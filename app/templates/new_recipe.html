@@ -1,43 +1,88 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>
-    Create a new recipe
-  </h1>
-  <form class="center-form h2">
-    <div id="blink-container">
-      <input type="text" id="recipe-name" name="recipe-name" 
-      placeholder="Vegan curry"> <span class="blink" id="blinker">|</span>
+  <div class="center-div">
+    <h1 class="title">
+      Create a new recipe
+    </h1>
+    <form class="h2">
+      <div id="blink-container">
+        <input type="text" id="recipe-name" name="recipe-name"
+        onfocus="this.placeholder = ''" 
+        onblur="this.placeholder = 'Write here your recipe\'s name'"
+        placeholder="Write here your recipe's name" size="25"> 
+      </div>
+    </form>
+    <h2>
+      Add a new ingredient
+    </h2>
+    <div class="wraper inline-flex">
+      <form>
+        <input type="number" min="1" max="500" id="quantity" name="quantity" 
+        placeholder="6" size="3" required>
+        <input type="text" id="ingredient" name="ingredient" placeholder="tomatoes" 
+        pattern="[A-Za-z]*" required>
+        <button type="button" class="btn btn-info" id="add-ingredient-button" onclick="addIngredient()">
+          Add
+        </button>
+      </form>
     </div>
-  </form>
-  <h2 class="center-form">
-    Add a new ingredient
-  </h2>
-  <form class="center-form">
-    <input type="number" min="0" max="500" id="quantity" name="quantity" 
-    placeholder="6" size="3" required>
-    <input type="text" id="ingredient" name="ingredient" placeholder="tomatoes" 
-    pattern="[A-Za-z]*" required>
-  </form>
-  <p>
+    <br>
+    <div id="ingredients-box">
 
-  </p>
+    </div>
+  </div>
   <script>
-    input = document.getElementById('recipe-name');
-    blinker = document.getElementById('blinker');
-    console.log(input.value);
-    input.addEventListener("focusin", removeBlink);
-    
-    input.addEventListener("focusout", addBlink);
-    
-    function addBlink() {
-      if (input.value === ''){
-        blinker.classList.remove('hide');
+    // Get elements from DOM
+    let area = document.getElementById('ingredients-box');
+    let quantity = document.getElementById('quantity');
+    let ingredient = document.getElementById('ingredient');
+
+    // Checks if quantity is an integer greater than zero
+    function validateQuantity(number){
+      let reg = /\d*/;
+      return (reg.test(number) && number > 0);
+    }
+
+    // Reads quantity and ingredient name, and appends it to the DOM
+    function addIngredient(){
+      if (validateQuantity(quantity.value)){
+
+        // Create delete button with class and id
+        let button = document.createElement('BUTTON'); 
+        button.classList.add("delete-button");
+        button.classList.add("btn");
+        button.classList.add("btn-danger");
+        button.textContent = "-";
+
+        // Create flex container to hold button and paragragh in same line
+        let container = document.createElement("div");
+        container.classList.add("wraper");
+        container.classList.add("inline-flex");
+
+        // Create paragragh to hold quantity and ingredient information
+        let tag = document.createElement("div");
+        
+        let sp = document.createElement("span");
+        sp.classList.add('vertical-center-span');
+
+        // Save text value to append it
+        let text = document.createTextNode(quantity.value + ' ' + ingredient.value + '\n');
+
+        // Clear input fields
+        quantity.value = '';
+        ingredient.value = '';
+
+        // Append ingredient to recipe
+        sp.appendChild(text);
+        tag.appendChild(sp);
+        container.appendChild(button);
+        container.appendChild(tag);
+        area.appendChild(container);
       }
-    }; 
-    
-    function removeBlink(){
-      blinker.classList.add('hide');
-    }; 
+      else{
+        console.log('Error');
+      }
+    }
   </script>
 {% endblock %}

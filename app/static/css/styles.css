@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'merienda';
+  src: url('fonts/sora/sora-variablefont_wght-webfont.woff2') format('woff2'),
+       url('fonts/sora/sora-variablefont_wght-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+}
 .loged_user_button{
   background-image: url("/static/images/user.png");
   background-repeat: no-repeat;
@@ -12,7 +20,7 @@
 
 .center-form{
   width: 30%;
-  min-width: 300px;
+  min-width: 500px;
   margin-top: 30px;
   margin-left: auto;
   margin-right: auto;
@@ -20,6 +28,12 @@
 
 .center-text{
   text-align: center;
+}
+
+.center-div{
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .wraper{
@@ -52,6 +66,39 @@
 
 .hide{
   opacity: 0%;
+}
+
+.title{
+  font-family: 'merienda', Arial, Helvetica, sans-serif;
+}
+
+.delete-button{
+  display: inline;
+  font-size: 0.95rem;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  margin-right: 10px;
+}
+
+.inline-flex{
+  display: flex;
+  width: max-content;
+}
+
+.vertical-center-span{
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+}
+
+#add-ingredient-button{
+  height: 30px;
+  font-size: 0.95rem;
+  text-align: center;
+  line-height: 1rem;
 }
 
 #login-btn{
@@ -89,9 +136,10 @@
 }
 
 #blinker{
-  position: relative;
-  top: -43px;
-  left: 173px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  text-align: right;
 }
 
 #banner-text{
@@ -102,55 +150,21 @@
 
 #recipe-name{
   border: none;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+}
+
+#ingredients-box{
+  margin-top: 3vh;
+}
+
+#ingredients-box:hover{
+  cursor: not-allowed;
+  resize: none;
 }
 
 #blink-container{
-  display: inline-block;
   position: relative;
   overflow: hidden;
 }
 
-@keyframes "blink" {
-  from, to {
-    color: transparent;
-  }
-  50% {
-    color: rgb(150, 150, 150);
-  }
-}
-
-@-moz-keyframes blink {
-  from, to {
-    color: transparent;
-  }
-  50% {
-    color: black;
-  }
-}
-
-@-webkit-keyframes "blink" {
-  from, to {
-    color: transparent;
-  }
-  50% {
-    color: black;
-  }
-}
-
-@-ms-keyframes "blink" {
-  from, to {
-    color: transparent;
-  }
-  50% {
-    color: black;
-  }
-}
-
-@-o-keyframes "blink" {
-  from, to {
-    color: transparent;
-  }
-  50% {
-    color: color: rgb(163, 163, 163);;
-  }
-}
