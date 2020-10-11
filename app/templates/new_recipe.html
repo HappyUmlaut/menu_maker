@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="center-div">
+  <div class="center-div" id="main_container">
     <h1 class="title">
       Create a new recipe
     </h1>
@@ -28,61 +28,8 @@
       </form>
     </div>
     <br>
-    <div id="ingredients-box">
-
-    </div>
+    <form action="/new_recipe" method="POST" id="ingredients-box">
+    </form>
   </div>
-  <script>
-    // Get elements from DOM
-    let area = document.getElementById('ingredients-box');
-    let quantity = document.getElementById('quantity');
-    let ingredient = document.getElementById('ingredient');
-
-    // Checks if quantity is an integer greater than zero
-    function validateQuantity(number){
-      let reg = /\d*/;
-      return (reg.test(number) && number > 0);
-    }
-
-    // Reads quantity and ingredient name, and appends it to the DOM
-    function addIngredient(){
-      if (validateQuantity(quantity.value)){
-
-        // Create delete button with class and id
-        let button = document.createElement('BUTTON'); 
-        button.classList.add("delete-button");
-        button.classList.add("btn");
-        button.classList.add("btn-danger");
-        button.textContent = "-";
-
-        // Create flex container to hold button and paragragh in same line
-        let container = document.createElement("div");
-        container.classList.add("wraper");
-        container.classList.add("inline-flex");
-
-        // Create paragragh to hold quantity and ingredient information
-        let tag = document.createElement("div");
-        
-        let sp = document.createElement("span");
-        sp.classList.add('vertical-center-span');
-
-        // Save text value to append it
-        let text = document.createTextNode(quantity.value + ' ' + ingredient.value + '\n');
-
-        // Clear input fields
-        quantity.value = '';
-        ingredient.value = '';
-
-        // Append ingredient to recipe
-        sp.appendChild(text);
-        tag.appendChild(sp);
-        container.appendChild(button);
-        container.appendChild(tag);
-        area.appendChild(container);
-      }
-      else{
-        console.log('Error');
-      }
-    }
-  </script>
+  <script src="{{url_for('static', filename = '/scripts/addIngredient.js')}}"></script>
 {% endblock %}

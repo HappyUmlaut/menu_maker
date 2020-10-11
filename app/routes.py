@@ -2,7 +2,7 @@ from app import app
 from app import db
 from flask_login import current_user, login_user, logout_user
 from app.models import User
-from flask import redirect, flash, url_for, render_template
+from flask import redirect, flash, url_for, render_template, request
 from app.forms import LoginForm, RegistrationForm
 
 @app.route('/')
@@ -41,9 +41,12 @@ def register():
 def new_menu():
     return render_template('new_menu.html')
 
-@app.route('/new_recipe')
+@app.route('/new_recipe', methods=['GET', 'POST'])
 def new_recipe():
-    return render_template('new_recipe.html')
+    if request.method == "POST":
+        return render_template('new_recipe.html')
+    else:    
+        return render_template('new_recipe.html')
 
 @app.route('/recipes')
 def show_recipes():

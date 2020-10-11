@@ -45,11 +45,11 @@
 }
 
 .menu-items:hover{
-  border-top: solid #1d1d1d 2px;
+  color: #a4161a;
 }
 
 .primary-bg{
-  background-color: #FED9B7;
+  background-color: #b7b7a4;
 }
 
 .text-color{
@@ -102,22 +102,25 @@
 }
 
 #login-btn{
-  color: #0D0D0D;
-  background-color: #0081A7;
+  color: whitesmoke;
+  background-color: #a4161a;
+  border-color: #a4161a;
+  font-weight: bold;
 }
 
 #register-btn{
   color: #000000;
-  background-color: #2ec4b6;
-  border-color: #2ec4b6;
+  background-color: #6b705c;
+  border-color: #6b705c;
+  font-weight: bold;
 }
 
 #register-btn:hover{
-  box-shadow: 0 3px 10px #1283a5b6;
+  box-shadow: 0 3px 10px grey;
 }
 
 #login-btn:hover{
-  box-shadow: 0 3px 10px #1283a5b6;
+  box-shadow: 0 3px 10px grey;
 }
 
 #dark-border{
@@ -156,15 +159,20 @@
 
 #ingredients-box{
   margin-top: 3vh;
+  margin-bottom: 3vh;
 }
 
 #ingredients-box:hover{
-  cursor: not-allowed;
+  cursor: default;
   resize: none;
 }
 
 #blink-container{
   position: relative;
   overflow: hidden;
+}
+
+#save-button{
+  margin-bottom: 10vh;
 }
 
