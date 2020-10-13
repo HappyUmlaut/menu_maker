@@ -25,8 +25,8 @@ def load_user(id):
 
 class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    recipe_name = db.Column(db.String(120), unique=True, nullable=False)
-    ingredient_name = db.Column(db.String(120), unique=True, nullable=False)
+    recipe_name = db.Column(db.String(120), nullable=False)
+    ingredient_name = db.Column(db.String(120), nullable=False)
     quantity = db.Column(db.Integer, nullable=False, default=1)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 

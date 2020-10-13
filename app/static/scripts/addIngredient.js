@@ -39,23 +39,19 @@ function addIngredient(){
     container.classList.add("inline-flex");
     container.id = "container-" + counter;
 
-    // Create paragragh to hold quantity and ingredient information
-    let tag = document.createElement("div");
-    
-    let sp = document.createElement("span");
-    sp.classList.add('vertical-center-span');
-    sp.classList.add('ingredient');
-
-    // Save text value to append it
-    let text = document.createTextNode(quantity.value + ' ' + ingredient.value + '\n');
+    // Create text input to hold quantity and ingredient information
+    let tag = document.createElement("INPUT");
+    tag.setAttribute("type", "text");
+    tag.setAttribute("readOnly", "true");
+    tag.setAttribute("name", 'ingredient' + counter);
+    tag.defaultValue = quantity.value + ' ' + ingredient.value;
+    tag.classList.add('ingredient');
 
     // Clear input fields
     quantity.value = '';
     ingredient.value = '';
 
     // Append ingredient to recipe
-    sp.appendChild(text);
-    tag.appendChild(sp);
     container.appendChild(button);
     container.appendChild(tag);
 
@@ -77,11 +73,11 @@ function addIngredient(){
       // Create sumbit button for form
       saveButton = document.createElement('BUTTON');
       saveButton.setAttribute("type", "submit"); 
+      saveButton.setAttribute("value", "Submit"); 
       saveButton.id = 'save-button';
       saveButton.classList.add('btn');
       saveButton.classList.add('btn-info');
       saveButton.textContent = 'Save Recipe';
-      saveButton.setAttribute("onclick", "saveRecipe()");
 
       // Append button to form
       form.appendChild(saveButton);
@@ -107,6 +103,30 @@ function deleteIngredient(element){
   // Delete container with same id number
   let container = document.getElementById("container-" + id_number)
   container.remove();
+}
+
+// Right before submit get the recipe's name and add it to the form
+function addRecipeName(){
+  console.log("I'm in");
+  // Get recipe's name from previous element
+  let recipe = document.getElementById('recipe-name');
+
+  // Get form element
+  let form = document.getElementById('ingredients-box');
+
+  // Create input element
+  let input = document.createElement("INPUT");
+  input.setAttribute("type", "text");
+  input.setAttribute("readOnly", "true");
+  input.setAttribute("name", 'recipe');
+  input.defaultValue = recipe.value;
+  input.id = 'recipe';
+
+  // Append recipe name to form
+  form.appendChild(input);
+
+  return true;
+
 }
 
 // Gets all ingredients and calls the same page with a POST request to save it

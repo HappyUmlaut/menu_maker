@@ -1,9 +1,10 @@
 from app import app
 from app import db
 from flask_login import current_user, login_user, logout_user
-from app.models import User
-from flask import redirect, flash, url_for, render_template, request
+from app.models import User, Ingredient
+from flask import redirect, flash, url_for, render_template, request, session
 from app.forms import LoginForm, RegistrationForm
+from sys import stderr
 
 @app.route('/')
 def index():
@@ -44,7 +45,54 @@ def new_menu():
 @app.route('/new_recipe', methods=['GET', 'POST'])
 def new_recipe():
     if request.method == "POST":
-        return render_template('new_recipe.html')
+        # Get data from form
+        data = request.form
+
+        # Separate quantity and ingredient names, and save them to 
+        # database if user is logged in, or to session if not
+        if current_user.is_authenticated:
+            # Get recipe name
+            recipe_name = data['recipe'];
+
+            # Save ingredients in recipe dictionary
+            for ingredient in data.values():
+                # Pass recipe because it is not an ingredient
+                if ingredient == recipe_name:
+                    continue
+                # Split in maximum 2 parts (quantity and name)
+                quantity, name = ingredient.split(' ', 1)
+
+                # Add ingredient to database session
+                next_ingredient = Ingredient(recipe_name = recipe_name, 
+                                ingredient_name = name, quantity = quantity,
+                                user = current_user)
+                db.session.add(next_ingredient)
+
+            # Commit session to database
+            db.session.commit()
+
+            return redirect(url_for('index'))
+        else:
+            # Get recipe name
+            recipe_name = data['recipe'];
+
+            # Create dictionary for this recipe
+            recipe = {}
+
+            # Save ingredients in recipe dictionary
+            for ingredient in data.values():
+                # Pass recipe because it is not an ingredient
+                if ingredient == recipe_name:
+                    continue
+                # Split in maximum 2 parts (quantity and name)
+                quantity, name = ingredient.split(' ', 1)
+                recipe[name] = quantity
+            
+            # Save recipe to session
+            session[recipe_name] = recipe
+
+            flash ('Recipe saved!')
+            return redirect(url_for('index'))
     else:    
         return render_template('new_recipe.html')
 

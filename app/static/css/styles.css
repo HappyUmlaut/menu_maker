@@ -94,6 +94,14 @@
   line-height: normal;
 }
 
+.ingredient{
+  border: none;
+}
+
+#recipe{
+  opacity: 0;
+}
+
 #add-ingredient-button{
   height: 30px;
   font-size: 0.95rem;
