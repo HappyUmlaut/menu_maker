@@ -6,17 +6,6 @@
   font-style: normal;
 
 }
-.loged_user_button{
-  background-image: url("/static/images/user.png");
-  background-repeat: no-repeat;
-  background-size: 48px;
-  background-position: center;
-  height: 64px;
-  width: 64px;
-  border: 0;
-  background-color: transparent;
-  z-index: 1;
-}
 
 .center-form{
   width: 30%;
@@ -36,24 +25,8 @@
   margin-right: auto;
 }
 
-.wraper{
-  display: inline-flex;
-  width: 180px;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
 .menu-items:hover{
   color: #a4161a;
-}
-
-.primary-bg{
-  background-color: #b7b7a4;
-}
-
-.text-color{
-  color: #0D0D0D;
 }
 
 .blink{
@@ -109,13 +82,6 @@
   line-height: 1rem;
 }
 
-#login-btn{
-  color: whitesmoke;
-  background-color: #a4161a;
-  border-color: #a4161a;
-  font-weight: bold;
-}
-
 #register-btn{
   color: #000000;
   background-color: #6b705c;
@@ -129,21 +95,6 @@
 
 #login-btn:hover{
   box-shadow: 0 3px 10px grey;
-}
-
-#dark-border{
-  border-color: rgb(95, 95, 95);
-}
-
-#user-banner{
-  position: relative;
-  text-align: left;
-  width: 120px;
-  background-color: #00AFB9;
-  border: solid 2px #00AFB9;
-  border-radius: 60px;
-  margin-right: -50px;
-  z-index: 0;
 }
 
 #blinker{

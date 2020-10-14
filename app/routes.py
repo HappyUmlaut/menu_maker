@@ -98,7 +98,22 @@ def new_recipe():
 
 @app.route('/recipes')
 def show_recipes():
-    return render_template('recipes.html')
+    if current_user.is_authenticated:
+        # Get current user id
+        user_id = current_user.get_id()
+
+        # Get all recipes for current user
+        recipes = db.session.query(Ingredient.recipe_name).filter(Ingredient.user_id==1).distinct(Ingredient.recipe_name).all()
+
+        # Create dictionary to hold all ingredients for each recipe
+        full_recipes = {}
+        # Since query returns a named tuple, unpack tuple in for loop to use recipe name directly
+        for recipe, in recipes:
+            full_recipes[recipe] = db.session.query(Ingredient.quantity, Ingredient.ingredient_name).filter(Ingredient.recipe_name==recipe).all()
+            
+        return render_template('recipes.html', recipes=full_recipes)
+    else:
+        return render_template('recipes.html')
 
 @app.route('/logout')
 def logout():

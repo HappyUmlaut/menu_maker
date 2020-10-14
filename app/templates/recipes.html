@@ -1,7 +1,34 @@
 {% extends "base.html" %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/recipes.css') }}">
+{% endblock %}
+
 {% block content %}
-  <p>
-    Looks like there is nothing here yet!
-  </p>
+  <div class="recipe-title-wraper wraper">
+    <h1 class="title">
+      Your recipes
+    </h1>
+    <form action="/new_recipe">
+      <button type="submit" class="btn btn-info">
+        Add new recipe
+      </button>
+    </form>
+  </div>
+  {% if recipes %}
+    <div id="recipes-list">
+    {% for recipe, ingredients in recipes.items() %}
+      <div class="recipe-wraper">
+        <img class="recipe-image" src="{{url_for('static', filename = '/images/image.png')}}" alt="Placeholder for recipes without their own image">
+        <p class="h2">
+          {{ recipe }}
+        </p>
+      </div>
+      {% for ingredient in ingredients %}
+
+      {% endfor %}
+    {% endfor %}
+    </div>
+  {% endif %}
+  <!-- <script src="{{url_for('static', filename = '/scripts/listRecipes.js')}}"></script> -->
 {% endblock %}

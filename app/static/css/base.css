@@ -1,0 +1,50 @@
+
+.primary-bg{
+  background-color: #b7b7a4;
+}
+
+.text-color{
+  color: #0D0D0D;
+}
+
+.wraper{
+  display: inline-flex;
+  width: 180px;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.loged_user_button{
+  background-image: url("/static/images/user.png");
+  background-repeat: no-repeat;
+  background-size: 48px;
+  background-position: center;
+  height: 64px;
+  width: 64px;
+  border: 0;
+  background-color: transparent;
+  z-index: 1;
+}
+
+#dark-border{
+  border-color: rgb(95, 95, 95);
+}
+
+#login-btn{
+  color: whitesmoke;
+  background-color: #a4161a;
+  border-color: #a4161a;
+  font-weight: bold;
+}
+
+#user-banner{
+  position: relative;
+  text-align: left;
+  width: 120px;
+  background-color: #00AFB9;
+  border: solid 2px #00AFB9;
+  border-radius: 60px;
+  margin-right: -50px;
+  z-index: 0;
+}

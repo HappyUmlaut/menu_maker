@@ -5,7 +5,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <meta charset="UTF-8">
     <meta name="description" content="Menu maker web app">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    {% block style %}{% endblock %}
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar navbar-light primary-bg">
@@ -38,7 +39,7 @@
         {% if not current_user.is_authenticated %}
         <div class="wraper">
           <form action="/login">
-            <button class="text-color form-inline btn btn-primary" id="login-btn">
+            <button class="text-color btn btn-primary" id="login-btn">
               Log In
             </button>
           </form>
@@ -53,7 +54,7 @@
           <button class="text-color" id="user-banner">
               Log Out
           </div>
-          <button class="form-inline loged_user_button">
+          <button class="loged_user_button">
             {% block buttons_content %}{% endblock %}
           </button>
         </form>
