@@ -2,13 +2,14 @@ from app import db
 from app import login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy_imageattach.entity import Image, image_attachment
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    recipes = db.relationship('Ingredient', backref='user', lazy=True)
+    recipes = db.relationship('Recipe', backref='user', lazy=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)    
@@ -23,12 +24,28 @@ class User(UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
-class Ingredient(db.Model):
+class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    recipe_name = db.Column(db.String(120), nullable=False)
-    ingredient_name = db.Column(db.String(120), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False, default=1)
+    name = db.Column(db.String(120), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    ingredients = db.relationship('Ingredient', backref='recipe', lazy=True)
+    picture = image_attachment('RecipePicture')
 
     def __repr__(self):
-        return '<Ingredient %r>' % self.ingredient_name
+        return '<Recipe: %r>' % self.name
+
+class Ingredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False, default=1)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+
+    def __repr__(self):
+        return 'f<Ingredient: {self.name} | Quantity: {self.quantity} >'
+
+class RecipePicture(db.Model, Image):
+    """Recipe picture model."""
+
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), primary_key=True)
+    recipe = db.relationship('Recipe')
+    __tablename__ = 'recipe_picture'

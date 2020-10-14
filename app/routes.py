@@ -1,7 +1,7 @@
 from app import app
 from app import db
 from flask_login import current_user, login_user, logout_user
-from app.models import User, Ingredient
+from app.models import User, Ingredient, Recipe
 from flask import redirect, flash, url_for, render_template, request, session
 from app.forms import LoginForm, RegistrationForm
 from sys import stderr
@@ -54,6 +54,10 @@ def new_recipe():
             # Get recipe name
             recipe_name = data['recipe'];
 
+            # Add recipe to database session
+            recipe = Recipe(name = recipe_name, user = current_user)
+            db.session.add(recipe)
+
             # Save ingredients in recipe dictionary
             for ingredient in data.values():
                 # Pass recipe because it is not an ingredient
@@ -63,9 +67,8 @@ def new_recipe():
                 quantity, name = ingredient.split(' ', 1)
 
                 # Add ingredient to database session
-                next_ingredient = Ingredient(recipe_name = recipe_name, 
-                                ingredient_name = name, quantity = quantity,
-                                user = current_user)
+                next_ingredient = Ingredient(name = name, quantity = quantity,
+                                recipe = recipe)
                 db.session.add(next_ingredient)
 
             # Commit session to database
@@ -103,13 +106,13 @@ def show_recipes():
         user_id = current_user.get_id()
 
         # Get all recipes for current user
-        recipes = db.session.query(Ingredient.recipe_name).filter(Ingredient.user_id==1).distinct(Ingredient.recipe_name).all()
+        recipes = db.session.query(Recipe.name).filter(Recipe.user_id==1).all()
 
         # Create dictionary to hold all ingredients for each recipe
         full_recipes = {}
         # Since query returns a named tuple, unpack tuple in for loop to use recipe name directly
         for recipe, in recipes:
-            full_recipes[recipe] = db.session.query(Ingredient.quantity, Ingredient.ingredient_name).filter(Ingredient.recipe_name==recipe).all()
+            full_recipes[recipe] = db.session.query(Ingredient.quantity, Ingredient.name).filter(Ingredient.recipe_id.in_(db.session.query(Recipe.id).filter(Recipe.name==recipe))).all()[0]
             
         return render_template('recipes.html', recipes=full_recipes)
     else:

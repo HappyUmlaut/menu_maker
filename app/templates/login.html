@@ -4,6 +4,10 @@
   {{ title }}
 {% endblock %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+{% endblock %}
+
 {% block content %}
   <h1 class="text-center display-4">Log In</h1>
   <form action="" method="post" novalidate>
