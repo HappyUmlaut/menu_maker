@@ -12,7 +12,10 @@
 }
 
 .recipe-image{
-  margin-right: 10px;
+  margin: 5px 10px 5px 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50px;
 }
 
 .recipe-title-wraper{

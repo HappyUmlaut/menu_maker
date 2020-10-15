@@ -117,6 +117,9 @@
 }
 
 #ingredients-box{
+  display: flex;
+  flex-flow: column;
+  justify-items: flex-start;
   margin-top: 3vh;
   margin-bottom: 3vh;
 }
@@ -132,6 +135,16 @@
 }
 
 #save-button{
-  margin-bottom: 10vh;
+  width: 150px;
+}
+
+#buttons-container{
+  display: flex;
+  flex-flow: nowrap row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5vh;
+  width: 30vw;
+  max-width: 450px;
 }
 

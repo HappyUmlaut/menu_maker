@@ -1,8 +1,8 @@
-"""Changed representation for Recipe and Ingredient
+"""empty message
 
-Revision ID: c59f874fabbe
+Revision ID: b5e7bf4db985
 Revises: 
-Create Date: 2020-10-14 12:00:10.344404
+Create Date: 2020-10-14 16:58:03.079604
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c59f874fabbe'
+revision = 'b5e7bf4db985'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -43,14 +43,10 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('recipe_picture',
-    sa.Column('width', sa.Integer(), nullable=False),
-    sa.Column('height', sa.Integer(), nullable=False),
-    sa.Column('mimetype', sa.String(length=255), nullable=False),
-    sa.Column('original', sa.Boolean(), nullable=False),
-    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('recipe_id', sa.Integer(), nullable=False),
+    sa.Column('filename', sa.String(length=255), nullable=True),
     sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
-    sa.PrimaryKeyConstraint('width', 'height', 'recipe_id')
+    sa.PrimaryKeyConstraint('recipe_id')
     )
     # ### end Alembic commands ###
 

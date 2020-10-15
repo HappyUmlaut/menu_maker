@@ -1,10 +1,12 @@
 from app import app
 from app import db
 from flask_login import current_user, login_user, logout_user
-from app.models import User, Ingredient, Recipe
+from app.models import User, Ingredient, Recipe, RecipePicture
 from flask import redirect, flash, url_for, render_template, request, session
 from app.forms import LoginForm, RegistrationForm
 from sys import stderr
+from werkzeug.utils import secure_filename
+import os
 
 @app.route('/')
 def index():
@@ -42,6 +44,10 @@ def register():
 def new_menu():
     return render_template('new_menu.html')
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route('/new_recipe', methods=['GET', 'POST'])
 def new_recipe():
     if request.method == "POST":
@@ -51,6 +57,8 @@ def new_recipe():
         # Separate quantity and ingredient names, and save them to 
         # database if user is logged in, or to session if not
         if current_user.is_authenticated:
+            username = current_user.username
+
             # Get recipe name
             recipe_name = data['recipe'];
 
@@ -63,6 +71,9 @@ def new_recipe():
                 # Pass recipe because it is not an ingredient
                 if ingredient == recipe_name:
                     continue
+                if ingredient.lower().endswith(('.png','.jpg')):
+                    print('image found', file=stderr)
+                    continue
                 # Split in maximum 2 parts (quantity and name)
                 quantity, name = ingredient.split(' ', 1)
 
@@ -70,6 +81,34 @@ def new_recipe():
                 next_ingredient = Ingredient(name = name, quantity = quantity,
                                 recipe = recipe)
                 db.session.add(next_ingredient)
+
+            # Check if an image was uploaded
+            if 'image' in request.files and request.files['image'].filename != '':
+                file = request.files['image']
+                filename, extension = file.filename.split('.')
+                file.filename = recipe_name + '_user-' + username + '.' + extension
+
+                # Create a secure filename
+                filename = secure_filename(file.filename)
+
+                # Check if user directory for images exist. If not, create it
+                if not os.path.isdir('app/static/images/recipe_images/' + username):
+                    os.mkdir('app/static/images/recipe_images/' + username)
+
+                # Save image
+                file.save(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], username + '/'), filename))
+
+                # Add image location to database
+                file_location = '/images/recipe_images/' + username + '/' + filename
+
+                # Add image to database
+                image = RecipePicture(recipe = recipe, filename = file_location)
+
+            else:
+                file_location = '/images/recipe_images/image-placeholder.png'
+                image = RecipePicture(recipe = recipe, filename = file_location)
+
+            db.session.add(image)
 
             # Commit session to database
             db.session.commit()
@@ -110,11 +149,17 @@ def show_recipes():
 
         # Create dictionary to hold all ingredients for each recipe
         full_recipes = {}
+        recipe_images = []
         # Since query returns a named tuple, unpack tuple in for loop to use recipe name directly
         for recipe, in recipes:
             full_recipes[recipe] = db.session.query(Ingredient.quantity, Ingredient.name).filter(Ingredient.recipe_id.in_(db.session.query(Recipe.id).filter(Recipe.name==recipe))).all()[0]
-            
-        return render_template('recipes.html', recipes=full_recipes)
+
+             # Get image for recipe
+            recipe_images.append(db.session.query(RecipePicture.filename).filter(RecipePicture.recipe_id.in_(db.session.query(Recipe.id).filter(Recipe.name==recipe))).all()[0])
+
+        print(recipe_images, file=stderr)
+
+        return render_template('recipes.html', recipes=full_recipes, recipe_images = recipe_images)
     else:
         return render_template('recipes.html')
 

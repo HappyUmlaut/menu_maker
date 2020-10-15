@@ -29,7 +29,7 @@ class Recipe(db.Model):
     name = db.Column(db.String(120), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     ingredients = db.relationship('Ingredient', backref='recipe', lazy=True)
-    picture = image_attachment('RecipePicture')
+    picture = db.relationship('RecipePicture', backref='recipe')
 
     def __repr__(self):
         return '<Recipe: %r>' % self.name
@@ -43,9 +43,11 @@ class Ingredient(db.Model):
     def __repr__(self):
         return 'f<Ingredient: {self.name} | Quantity: {self.quantity} >'
 
-class RecipePicture(db.Model, Image):
+class RecipePicture(db.Model):
     """Recipe picture model."""
 
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), primary_key=True)
-    recipe = db.relationship('Recipe')
+    filename = db.Column(db.String(255))
     __tablename__ = 'recipe_picture'
+    def __repr__(self):
+        return '<Filename: %r>' % self.filename

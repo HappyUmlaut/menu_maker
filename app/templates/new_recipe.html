@@ -32,7 +32,11 @@
       </form>
     </div>
     <br>
-    <form action="/new_recipe" method="POST" id="ingredients-box" onsubmit="return addRecipeName()">
+    <form action="/new_recipe" method="POST" id="ingredients-box" onsubmit="return addRecipeName()"
+      enctype=multipart/form-data>
+      <div class="wraper" id="buttons-container">
+        <input type="file" name="image" accept="image/png, image/jpeg">
+      </div>
     </form>
   </div>
   <script src="{{url_for('static', filename = '/scripts/addIngredient.js')}}"></script>

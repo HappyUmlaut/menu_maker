@@ -19,14 +19,11 @@
     <div id="recipes-list">
     {% for recipe, ingredients in recipes.items() %}
       <div class="recipe-wraper">
-        <img class="recipe-image" src="{{url_for('static', filename = '/images/image.png')}}" alt="Placeholder for recipes without their own image">
+        <img class="recipe-image" src="{{url_for('static', filename = recipe_images[loop.index0][0])}}" alt="Placeholder">
         <p class="h2">
           {{ recipe }}
         </p>
       </div>
-      {% for ingredient in ingredients %}
-
-      {% endfor %}
     {% endfor %}
     </div>
   {% endif %}

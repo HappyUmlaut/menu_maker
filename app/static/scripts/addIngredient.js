@@ -68,7 +68,7 @@ function addIngredient(){
     // Get save button if exists. Otherwise, create it along with a form to post data
     let saveButton = document.getElementById('save-button');
     if (!saveButton){
-      let form = document.getElementById("ingredients-box"); 
+      let container = document.getElementById("buttons-container"); 
 
       // Create sumbit button for form
       saveButton = document.createElement('BUTTON');
@@ -80,11 +80,7 @@ function addIngredient(){
       saveButton.textContent = 'Save Recipe';
 
       // Append button to form
-      form.appendChild(saveButton);
-
-      // Append form to page
-      main_container = document.getElementById('main_container');
-      main_container.appendChild(form);
+      container.appendChild(saveButton);
     }
 
     counter++;
