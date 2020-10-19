@@ -1,8 +1,8 @@
-"""empty message
+"""Add user_id column to Menu table
 
-Revision ID: b5e7bf4db985
+Revision ID: 675813214928
 Revises: 
-Create Date: 2020-10-14 16:58:03.079604
+Create Date: 2020-10-18 14:07:16.371392
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b5e7bf4db985'
+revision = '675813214928'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,6 +27,19 @@ def upgrade():
     )
     op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
     op.create_index(op.f('ix_user_username'), 'user', ['username'], unique=True)
+    op.create_table('menu',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('recipe1_id', sa.Integer(), nullable=True),
+    sa.Column('recipe2_id', sa.Integer(), nullable=True),
+    sa.Column('recipe3_id', sa.Integer(), nullable=True),
+    sa.Column('recipe4_id', sa.Integer(), nullable=True),
+    sa.Column('recipe5_id', sa.Integer(), nullable=True),
+    sa.Column('recipe6_id', sa.Integer(), nullable=True),
+    sa.Column('recipe7_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('recipe',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=120), nullable=False),
@@ -56,6 +69,7 @@ def downgrade():
     op.drop_table('recipe_picture')
     op.drop_table('ingredient')
     op.drop_table('recipe')
+    op.drop_table('menu')
     op.drop_index(op.f('ix_user_username'), table_name='user')
     op.drop_index(op.f('ix_user_email'), table_name='user')
     op.drop_table('user')

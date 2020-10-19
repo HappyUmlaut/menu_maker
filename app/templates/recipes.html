@@ -15,7 +15,7 @@
       </button>
     </form>
   </div>
-  {% if recipes %}
+  {% if recipes and recipe_images %}
     <div id="recipes-list">
     {% for recipe, ingredients in recipes.items() %}
       <div class="recipe-wraper">
@@ -26,6 +26,16 @@
       </div>
     {% endfor %}
     </div>
+  {% elif recipes and not recipe_images %}
+    <div id="recipes-list">
+    {% for recipe in recipes %}
+      <div class="recipe-wraper">
+        <p class="h2">
+          {{ recipe['name'] }}
+        </p>
+      </div>
+    {% endfor %}
+    </div>
+
   {% endif %}
-  <!-- <script src="{{url_for('static', filename = '/scripts/listRecipes.js')}}"></script> -->
 {% endblock %}

@@ -16,6 +16,7 @@
 }
 
 .loged_user_button{
+  position: relative;
   background-image: url("/static/images/user.png");
   background-repeat: no-repeat;
   background-size: 48px;
@@ -40,6 +41,7 @@
 
 #user-banner{
   position: relative;
+  top: 5px;
   text-align: left;
   width: 120px;
   background-color: #00AFB9;

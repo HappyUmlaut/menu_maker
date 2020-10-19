@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block style %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/menus.css') }}">
+{% endblock %}
+
+
+{% block content %}
+  <div class="title-wraper wraper">
+    <h1 class="title">
+      Your menus
+    </h1>
+    <form action="/menus" method="POST">
+      <button name="submit-button" type="submit" value="new-menu" class="btn btn-info" id="new-menu-btn">
+        New menu
+      </button>
+    </form>
+  </div>
+  <div id="menu-list">
+    {% for menu in menus %}
+    <div class="menu-wraper">
+      {% for recipe_name, image_file in menu.items() if not recipe_name == 'id' %}
+        <div class="menu-item" >
+          <div class='day-header'>
+            {{ week[loop.index0] }}
+          </div>
+          <img class="recipe-image" src="{{url_for('static', filename = image_file)}}" alt="{{recipe_name}} image">
+          <div class="recipe-name">
+            {{ recipe_name }}
+          </div>
+        </div> 
+      {%- endfor -%}
+      <form action="/menus" method="POST">
+        <button type="submit" name="submit-button" value="{{menu['id']}}" class="btn btn-danger">
+          Delete Recipe
+        </button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  {% endblock %}

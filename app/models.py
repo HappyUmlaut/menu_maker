@@ -10,6 +10,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     recipes = db.relationship('Recipe', backref='user', lazy=True)
+    menu = db.relationship('Menu', backref='user')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)    
@@ -51,3 +52,18 @@ class RecipePicture(db.Model):
     __tablename__ = 'recipe_picture'
     def __repr__(self):
         return '<Filename: %r>' % self.filename
+
+class Menu(db.Model):
+    """Weekly menu model."""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    recipe1_id = db.Column(db.Integer)
+    recipe2_id = db.Column(db.Integer)
+    recipe3_id = db.Column(db.Integer)
+    recipe4_id = db.Column(db.Integer)
+    recipe5_id = db.Column(db.Integer)
+    recipe6_id = db.Column(db.Integer)
+    recipe7_id = db.Column(db.Integer)
+
+    __tablename__ = 'menu'
+

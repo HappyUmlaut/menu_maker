@@ -19,7 +19,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="ollapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item menu-items">
             <a class="nav-link" href="/recipes">
@@ -28,10 +28,10 @@
               </span>
             </a>
           </li>
-          <li class="nav-item menu-items">
-            <a class="text-color nav-link" href="/new_menu">
+          <li class="nav-item menu-items" style="margin-right: auto;">
+            <a class="text-color nav-link" href="/menus">
               <span class="text-color">
-                Create a menu
+                Your menus
               </span>
             </a>
           </li>
@@ -50,14 +50,13 @@
           </form>
         </div>
         {% else %}
-        <form action="/logout">
-          <button class="text-color" id="user-banner">
-              Log Out
-          </div>
-          <button class="loged_user_button">
-            {% block buttons_content %}{% endblock %}
-          </button>
-        </form>
+          <form action="/logout">
+            <button class="text-color" id="user-banner">
+                Log Out
+            </button>
+            <button class="loged_user_button">
+            </button>
+          </form>
         {% endif %}
       </div>
     </nav>
