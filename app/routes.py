@@ -5,7 +5,7 @@ from app.models import User, Ingredient, Recipe, RecipePicture, Menu
 from flask import redirect, flash, url_for, render_template, request, session
 from app.forms import LoginForm, RegistrationForm
 from sys import stderr
-from random import randint
+from random import randint, shuffle
 from werkzeug.utils import secure_filename
 import os
 
@@ -21,7 +21,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Invalid username or password', 'alert alert-danger')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('index'))
@@ -37,13 +37,16 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!')
+        flash('You are now registered. You can now log in to your account', 'no-margin alert alert-success')
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
 @app.route('/menus', methods=['GET', 'POST'])
 def new_menu():
     user_menus = get_user_menus()
+    # List with week days to pass to the template
+    week = ['Monday', 'Thursday', 'Wednesday', 'Tuesday', 'Friday', 'Saturday', 'Sunday']
+
     if request.method == 'POST':
         if request.form['submit-button'] == 'new-menu':
             menu = create_menu()
@@ -53,37 +56,42 @@ def new_menu():
                 db.session.commit()
                 return redirect(url_for('new_menu'))
         else:
-            # Get info from form to know which button was pressed, and delet that menu
+            # Get info from form to know which button was pressed, and delete that menu
             id_to_delete = request.form['submit-button']
             delete_menu(id_to_delete)
             return redirect(url_for('new_menu'))
 
-    # List to hold existing menus, which are dictionaries
-    menus = []
+    if current_user.is_authenticated:
 
-    for menu in user_menus:
-        # Dictionary to hold recipes and their images
-        current_menu = {}
-        for recipe_id in menu:
-            if 'id' not in current_menu:
-                # The first item contains the menu id from the database
-                current_menu['id'] = recipe_id
-                continue
+        # List to hold existing menus, which are dictionaries
+        menus = []
 
-            # Get data for every recipe in the curren menu being iterated
-            name, image = db.session.query(Recipe.name, RecipePicture.filename).join(RecipePicture).filter(Recipe.id == recipe_id).all()[0]
+        for menu in user_menus:
+            # Dictionary to hold recipes and their images
+            current_menu = {}
+            for recipe_id in menu:
+                if 'id' not in current_menu:
+                    # The first item contains the menu id from the database
+                    current_menu['id'] = recipe_id
+                    continue
 
-            # Since it is a dictionary, identical names will overwrite. Add a space to indicate 'repeated'
-            if name in current_menu:
-                current_menu[name + ' '] = image
-            else:
+                # Get data for every recipe in the curren menu being iterated
+                name, image = db.session.query(Recipe.name, RecipePicture.filename).join(RecipePicture).filter(Recipe.id == recipe_id).all()[0]
+
+                # Since it is a dictionary, identical names will overwrite. Add a space to indicate 'repeated'
+                while name in current_menu:
+                    name = name + ' '
+                
                 current_menu[name] = image
+                    
+            # Add current menu to full list of menus
+            menus.append(current_menu)
+        
+        return render_template('menus.html', menus = menus, week = week)
 
-        # Add current menu to full list of menus
-        menus.append(current_menu)
-    # List with week days to pass to the template
-    week = ['Monday', 'Thursday', 'Wednesday', 'Tuesday', 'Friday', 'Saturday', 'Sunday']
-    return render_template('menus.html', menus = menus, week = week)
+    # If user not authenticated:
+
+    return render_template('menus.html', menus = user_menus, week = week)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -116,7 +124,6 @@ def new_recipe():
                 if ingredient == recipe_name:
                     continue
                 if ingredient.lower().endswith(('.png','.jpg')):
-                    print('image found', file=stderr)
                     continue
                 # Split in maximum 2 parts (quantity and name)
                 quantity, name = ingredient.split(' ', 1)
@@ -178,10 +185,10 @@ def new_recipe():
             # Save recipe to session
             session['recipes'].append(recipe)
 
-            flash ('Recipe saved!')
+            flash ('Recipe saved!', 'no-margin alert alert-success')
             return redirect(url_for('show_recipes'))
     else:
-        print(session['recipes'], file=stderr)
+        # print(session['recipes'], file=stderr)
         return render_template('new_recipe.html')
 
 @app.route('/recipes')
@@ -191,7 +198,7 @@ def show_recipes():
         user_id = current_user.get_id()
 
         # Get all recipes for current user
-        recipes = db.session.query(Recipe.name).filter(Recipe.user_id==1).all()
+        recipes = db.session.query(Recipe.name).filter(Recipe.user_id==user_id).all()
 
         # Create dictionary to hold all ingredients for each recipe
         full_recipes = {}
@@ -208,6 +215,7 @@ def show_recipes():
         if 'recipes' not in session:
             session['recipes'] = []
         recipes = session['recipes']
+        # print(recipes, file=stderr)
         return render_template('recipes.html', recipes = recipes)
 
 @app.route('/logout')
@@ -216,49 +224,85 @@ def logout():
     return redirect(url_for('index'))
 
 def create_menu():
-    # Get ids in tuple form
-    recipe_tuples = db.session.query(Recipe.id).all()
+    if current_user.is_authenticated:
+        # Get user id
+        user_id = current_user.get_id()
 
-    # Get id for each tuple
-    recipe_ids = [tupl[0] for tupl in recipe_tuples]
+        # Get ids in tuple form
+        recipe_tuples = db.session.query(Recipe.id).filter(Recipe.user_id==user_id).all()
 
-    # Create a list of 7 recipes for a 1 week menu
-    menu_list = []
+        # Get id for each tuple
+        recipe_ids = [tupl[0] for tupl in recipe_tuples]
 
-    # List to keep track of which position of recipe_ids have been used.
-    # This will prevent duplicated recipes when possible
-    used_positions = []
-    ids_quantity = len(recipe_ids)
+        # Create a list of 7 recipes for a 1 week menu
+        menu_list = []
 
-    while len(menu_list) < 7:
-        # If there are less than 7 recipes, some ids will be duplicated.
-        # Clear used position when that happens, to allow a second round of selection
-        
-        if len(used_positions) == ids_quantity:
-            used_positions.clear()
+        # List to keep track of which position of recipe_ids have been used.
+        # This will prevent duplicated recipes when possible
+        used_positions = []
+        ids_quantity = len(recipe_ids)
 
-        # Get random position for recipe_ids
-        random_position = randint(0, ids_quantity - 1)
-        
-        # If that id has been taken, select another
-        while random_position in used_positions:
+        while len(menu_list) < 7:
+            # If there are less than 7 recipes, some ids will be duplicated.
+            # Clear used position when that happens, to allow a second round of selection
+            
+            if len(used_positions) == ids_quantity:
+                used_positions.clear()
+
+            # Get random position for recipe_ids
             random_position = randint(0, ids_quantity - 1)
-        
-        # Add id to menu
-        menu_list.append(recipe_ids[random_position])
-        used_positions.append(random_position)
+            
+            # If that id has been taken, select another
+            while random_position in used_positions:
+                random_position = randint(0, ids_quantity - 1)
+            
+            # Add id to menu
+            menu_list.append(recipe_ids[random_position])
+            used_positions.append(random_position)
 
-    # Create menu object
-    menu = Menu(
-        recipe1_id = menu_list[0],
-        recipe2_id = menu_list[1],
-        recipe3_id = menu_list[2],
-        recipe4_id = menu_list[3],
-        recipe5_id = menu_list[4],
-        recipe6_id = menu_list[5],
-        recipe7_id = menu_list[6]
-    )
-    return menu
+        # Create menu object
+        menu = Menu(
+            recipe1_id = menu_list[0],
+            recipe2_id = menu_list[1],
+            recipe3_id = menu_list[2],
+            recipe4_id = menu_list[3],
+            recipe5_id = menu_list[4],
+            recipe6_id = menu_list[5],
+            recipe7_id = menu_list[6]
+        )
+        return menu
+    
+    # If user not authenticated
+    # Make sure that there are at least 7 recipes, and repeat if needed
+    if 'recipes' not in session:
+        session['recipes'] = []
+        flash('You don\'t have any recipes! Create here your first one.', 'no-margin alert alert-danger')
+        return redirect(url_for('new_recipe'))
+
+    recipes = session['recipes']
+    
+    while len(recipes) < 7:
+        # Repeat recipes in random order until there is a total of 7 recipes
+        recipes.append(recipes[randint(0, len(recipes) - 1)])
+
+    # Randomize recipes to create a random menu
+    shuffle(recipes)
+
+    # Add menu to session
+    menu = [
+        recipes[0]['name'],
+        recipes[1]['name'],
+        recipes[2]['name'],
+        recipes[3]['name'],
+        recipes[4]['name'],
+        recipes[5]['name'],
+        recipes[6]['name']
+    ]
+    session['menus'].append(menu)
+    print(menu, file=stderr)
+
+
+
 
 def get_user_menus():
     if (current_user.is_authenticated):
@@ -274,9 +318,17 @@ def get_user_menus():
         ).filter(Menu.user_id == current_user.id).all()
         return menus
 
+    if 'menus' not in session:
+        session['menus'] = []
+    
+    return session['menus']
+
 
 
 def delete_menu(menu_id):
-    menu = Menu.query.filter(Menu.id == menu_id)
-    menu.delete()
-    db.session.commit()
+    if current_user.is_authenticated:
+        menu = Menu.query.filter(Menu.id == menu_id)
+        menu.delete()
+        db.session.commit()
+    else:
+        session['menus'].pop(int(menu_id))

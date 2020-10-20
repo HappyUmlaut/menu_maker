@@ -19,22 +19,40 @@
   <div id="menu-list">
     {% for menu in menus %}
     <div class="menu-wraper">
-      {% for recipe_name, image_file in menu.items() if not recipe_name == 'id' %}
-        <div class="menu-item" >
-          <div class='day-header'>
-            {{ week[loop.index0] }}
-          </div>
-          <img class="recipe-image" src="{{url_for('static', filename = image_file)}}" alt="{{recipe_name}} image">
-          <div class="recipe-name">
-            {{ recipe_name }}
-          </div>
-        </div> 
-      {%- endfor -%}
-      <form action="/menus" method="POST">
-        <button type="submit" name="submit-button" value="{{menu['id']}}" class="btn btn-danger">
-          Delete Recipe
-        </button>
-      </form>
+      {% if current_user.is_authenticated %}
+        {% for recipe_name, image_file in menu.items() if not recipe_name == 'id' %}
+          <div class="menu-item" >
+            <div class='day-header'>
+              {{ week[loop.index0] }}
+            </div>
+            <img class="recipe-image" src="{{url_for('static', filename = image_file)}}" alt="{{recipe_name}} image">
+            <div class="recipe-name">
+              {{ recipe_name }}
+            </div>
+          </div> 
+        {%- endfor -%}
+        <form action="/menus" method="POST">
+          <button type="submit" name="submit-button" value="{{menu['id']}}" class="btn btn-danger">
+            Delete Recipe
+          </button>
+        </form>
+      {% else %}
+        {% for recipe_name in menu%}
+          <div class="menu-item" >
+            <div class='day-header'>
+              {{ week[loop.index0] }}
+            </div>
+            <div class="recipe-name">
+              {{ recipe_name }}
+            </div>
+          </div> 
+        {%- endfor -%}
+        <form action="/menus" method="POST">
+          <button type="submit" name="submit-button" value="{{loop.index0}}" class="btn btn-danger">
+            Delete Recipe
+          </button>
+        </form>
+      {% endif %}
     </div>
     {% endfor %}
   </div>

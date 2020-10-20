@@ -4,9 +4,26 @@
   Menu Maker
 {% endblock %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+{% endblock %}
 
 {% block content %}
-  <p>
-    Looks like there is nothing here yet!
-  </p>
+  <div class="landing-wraper">
+    <div class="item">
+      <img class="landing-image" alt="Example of a list of recipes saved in this web app" 
+            src="{{ url_for('static', filename='images/save_recipes.png') }}">
+      1. Add your recipes
+    </div>
+    <div class="item">
+      <img class="landing-image" alt="Example of a menu created in this web app" 
+            src="{{ url_for('static', filename='images/create_menu.png') }}">
+      2. Automatically create a menu for one week
+    </div>
+    <div class="item">
+      <img class="landing-image" alt="Squirrel eating a nut in a close up shot" 
+            src="{{ url_for('static', filename='images/enjoy.png') }}">
+      3. Enjoy your instant meals planning!
+    </div>
+  </div>
 {% endblock %}

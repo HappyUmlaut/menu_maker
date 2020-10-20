@@ -1,0 +1,73 @@
+@font-face {
+  font-family: 'indie_flower';
+  src: url('fonts/IndieFlower/indieflower-regular-webfont.woff2') format('woff2'),
+       url('fonts/IndieFlower/indieflower-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body{
+  overflow: hidden;
+}
+
+.landing-wraper{
+  font-size: 1.5rem;
+  display: flex;
+  flex-flow: nowrap row;
+  width: 85vw;
+  height: 80vh;
+  margin: auto auto;
+  justify-content: space-evenly;
+  align-content: center;
+}
+
+.item{
+  font-family: 'indie_flower', Arial, Helvetica, sans-serif;
+  font-size: x-large;
+  display: flex;
+  flex-flow: column;
+  justify-content: baseline;
+  align-items: center;
+  padding: 10% 0 0 0;
+  width: 33%;
+}
+
+.landing-image{
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 5px;
+  height: auto;
+}
+
+@media screen and (max-width: 1200px){
+  body{
+    overflow: visible;
+  }
+
+  .landing-image{
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 0px;
+    height: auto;
+  }
+
+  .item{
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px auto 50px auto;
+    padding: 0px;
+  }
+
+  .landing-wraper{
+    font-size: 1.5rem;
+    display: flex;
+    flex-flow: nowrap column;
+    width: 70vw;
+    height: 70vh;
+    margin: 0px auto 0px auto;
+    justify-content: space-between;
+    align-content: center;
+  }
+}

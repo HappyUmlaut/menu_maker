@@ -28,6 +28,10 @@
   z-index: 1;
 }
 
+.no-margin{
+  margin: 0;
+}
+
 #dark-border{
   border-color: rgb(95, 95, 95);
 }

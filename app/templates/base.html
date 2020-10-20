@@ -6,6 +6,17 @@
     <meta charset="UTF-8">
     <meta name="description" content="Menu maker web app">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class=flashes>
+        {% for category, message in messages %}
+          <p class="no-margin {{ category }}">{{ message }}</p>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
     {% block style %}{% endblock %}
   </head>
   <body>

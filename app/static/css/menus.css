@@ -1,20 +1,17 @@
 
 .title-wraper{
-  position: relative;
-  top: 3vh;
-  left: 3vw;
-  margin-bottom: 5vh;
+  margin: 5vh auto;
   flex-wrap: wrap;
-  width: 30vw;
+  width: 100vw;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
 }
 
 .menu-wraper{
   display: grid;
-  width: 570px;
-  margin: 10px 0;
-  padding-left: 3%;
+  width: 580px;
+  margin: 10px auto;
+  padding-left: 2%;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fit, 130px);
   justify-content: flex-start;
@@ -59,17 +56,14 @@
 }
 
 #menu-list{
-  padding-left: 3vw;
   width: 100%;
-  min-width: 180px;
-  max-width: 600px;
 }
 
 @media screen and (max-width: 1150px){
   .menu-wraper{
     display: grid;
-    width: 430px;
-    margin: 10px 0;
+    width: 450px;
+    margin: 10px auto;
     padding-left: 3%;
     grid-gap: 10px;
     grid-template-columns: repeat(auto-fit, 130px);
@@ -85,7 +79,7 @@
   .menu-wraper{
     display: grid;
     width: 300px;
-    margin: 10px 0;
+    margin: 10px auto;
     padding-left: 3%;
     grid-gap: 10px;
     grid-template-columns: repeat(auto-fit, 130px);

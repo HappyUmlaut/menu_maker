@@ -35,7 +35,9 @@
     <form action="/new_recipe" method="POST" id="ingredients-box" onsubmit="return addRecipeName()"
       enctype=multipart/form-data>
       <div class="wraper" id="buttons-container">
-        <input type="file" name="image" accept="image/png, image/jpeg">
+        {% if current_user.is_authenticated %}
+          <input type="file" name="image" accept="image/png, image/jpeg">
+        {% endif %}
       </div>
     </form>
   </div>
