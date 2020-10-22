@@ -208,7 +208,7 @@ def show_recipes():
             full_recipes[recipe] = db.session.query(Ingredient.quantity, Ingredient.name).filter(Ingredient.recipe_id.in_(db.session.query(Recipe.id).filter(Recipe.name==recipe))).all()[0]
 
              # Get image for recipe
-            recipe_images.append(db.session.query(RecipePicture.filename).filter(RecipePicture.recipe_id.in_(db.session.query(Recipe.id).filter(Recipe.name==recipe))).all()[0])
+            recipe_images.append(db.session.query(RecipePicture.filename).filter(RecipePicture.recipe_id.in_(db.session.query(Recipe.id).filter(Recipe.name==recipe).filter(Recipe.user_id==user_id))).all()[0])
 
         return render_template('recipes.html', recipes=full_recipes, recipe_images = recipe_images)
     else:

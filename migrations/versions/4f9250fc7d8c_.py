@@ -1,8 +1,8 @@
-"""Add user_id column to Menu table
+"""empty message
 
-Revision ID: 675813214928
+Revision ID: 4f9250fc7d8c
 Revises: 
-Create Date: 2020-10-18 14:07:16.371392
+Create Date: 2020-10-21 20:28:17.769754
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '675813214928'
+revision = '4f9250fc7d8c'
 down_revision = None
 branch_labels = None
 depends_on = None
