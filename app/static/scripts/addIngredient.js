@@ -11,40 +11,53 @@ function insertAfter(referenceNode, newNode) {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-// Checks if quantity is an integer greater than zero
+// Checks if quantity is an integer greater than zero. It can be 
+// an integer, a float, or a fraction
 function validateQuantity(number){
-  let reg = /\d*/;
-  return (reg.test(number) && number > 0);
+  let reg = /(\d+.*\d)|(\d+\/\d+) /;
+  return (reg.test(number));
 }
 
 // Reads quantity and ingredient name, and appends it to the DOM
 function addIngredient(){
-  if (validateQuantity(quantity.value)){
-    // Get last container in form, before save button
-    children = area.children;
-    child = children[children.length - 2];
-    
-    // Create delete button with class and id
-    let button = document.createElement('BUTTON'); 
-    button.classList.add("delete-button");
-    button.classList.add("btn");
-    button.classList.add("btn-danger");
-    button.textContent = "-";
-    button.id = "delete-" + counter;
-    button.setAttribute("onclick", "deleteIngredient(this)");
+  // Clean whitespace from inputs
+  let quantity_value = quantity.value.toString().trim();
+  let ingredient_value = ingredient.value.trim();
 
-    // Create flex container to hold button and paragragh in same line
-    let container = document.createElement("div");
-    container.classList.add("wraper");
-    container.classList.add("inline-flex");
-    container.id = "container-" + counter;
+  // Get last container in form, before save button
+  children = area.children;
+  child = children[children.length - 2];
+  
+  // Create delete button with class and id
+  let button = document.createElement('BUTTON'); 
+  button.classList.add("delete-button");
+  button.classList.add("btn");
+  button.classList.add("btn-danger");
+  button.textContent = "-";
+  button.id = "delete-" + counter;
+  button.setAttribute("onclick", "deleteIngredient(this)");
 
-    // Create text input to hold quantity and ingredient information
-    let tag = document.createElement("INPUT");
-    tag.setAttribute("type", "text");
-    tag.setAttribute("readOnly", "true");
-    tag.setAttribute("name", 'ingredient' + counter);
-    tag.defaultValue = quantity.value + ' ' + ingredient.value;
+  // Create flex container to hold button and paragragh in same line
+  let container = document.createElement("div");
+  container.classList.add("wraper");
+  container.classList.add("inline-flex");
+  container.id = "container-" + counter;
+
+  // Create text input to hold quantity and ingredient information
+  let tag = document.createElement("INPUT");
+  tag.setAttribute("type", "text");
+  tag.setAttribute("readOnly", "true");
+  tag.setAttribute("name", 'ingredient' + counter);
+  
+  // Form has the ingredient name
+  if (ingredient_value !== ''){
+    // Fill ingredient info
+    if (validateQuantity(quantity_value) && ingredient_value !== ''){
+      tag.defaultValue = quantity_value + ' ' + ingredient_value;
+    }
+    else{
+      tag.defaultValue = ingredient_value;
+    }
     tag.classList.add('ingredient');
 
     // Clear input fields
@@ -82,11 +95,8 @@ function addIngredient(){
       // Append button to form
       container.appendChild(saveButton);
     }
-
+    quantity.focus();
     counter++;
-  }
-  else{
-    console.log('Error');
   }
 }
 
@@ -103,10 +113,12 @@ function deleteIngredient(element){
 
 // Right before submit get the recipe's name and add it to the form
 function addRecipeName(){
-  console.log("I'm in");
   // Get recipe's name from previous element
   let recipe = document.getElementById('recipe-name');
-
+  if (recipe.value == '') {
+    recipe.focus()
+    return false;
+  }
   // Get form element
   let form = document.getElementById('ingredients-box');
 

@@ -33,7 +33,7 @@
         {%- endfor -%}
         <form action="/menus" method="POST">
           <button type="submit" name="submit-button" value="{{menu['id']}}" class="btn btn-danger">
-            Delete Recipe
+            Delete Menu
           </button>
         </form>
       {% else %}
@@ -49,7 +49,7 @@
         {%- endfor -%}
         <form action="/menus" method="POST">
           <button type="submit" name="submit-button" value="{{loop.index0}}" class="btn btn-danger">
-            Delete Recipe
+            Delete Menu
           </button>
         </form>
       {% endif %}

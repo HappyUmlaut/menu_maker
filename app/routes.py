@@ -7,6 +7,7 @@ from app.forms import LoginForm, RegistrationForm
 from sys import stderr
 from random import randint, shuffle
 from werkzeug.utils import secure_filename
+from numbers import Number
 import os
 
 @app.route('/')
@@ -126,7 +127,12 @@ def new_recipe():
                 if ingredient.lower().endswith(('.png','.jpg')):
                     continue
                 # Split in maximum 2 parts (quantity and name)
-                quantity, name = ingredient.split(' ', 1)
+                try:
+                    float(ingredient[0])
+                    quantity, name = ingredient.split(' ', 1)
+                except:
+                    quantity = 1
+                    name = ingredient
 
                 # Add ingredient to database session
                 next_ingredient = Ingredient(name = name, quantity = quantity,
@@ -164,7 +170,7 @@ def new_recipe():
             # Commit session to database
             db.session.commit()
 
-            return redirect(url_for('index'))
+            return redirect(url_for('show_recipes'))
         else:
             # Get recipe name
             recipe_name = data['recipe'];
@@ -179,7 +185,12 @@ def new_recipe():
                 if ingredient == recipe_name:
                     continue
                 # Split in maximum 2 parts (quantity and name)
-                quantity, name = ingredient.split(' ', 1)
+                try:
+                    float(ingredient[0])
+                    quantity, name = ingredient.split(' ', 1)
+                except:
+                    quantity = ''
+                    name = ingredient
                 recipe[name] = quantity
             
             # Save recipe to session
