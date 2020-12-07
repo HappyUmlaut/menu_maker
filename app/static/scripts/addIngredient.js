@@ -3,6 +3,12 @@ let area = document.getElementById('ingredients-box');
 let quantity = document.getElementById('quantity');
 let ingredient = document.getElementById('ingredient');
 
+ingredient.addEventListener('keydown', (evt) => {
+  if (evt.which === 13) {
+    addIngredient();
+  }
+});
+
 // Counter to differentiate id's
 let counter = 0;
 
@@ -14,7 +20,7 @@ function insertAfter(referenceNode, newNode) {
 // Checks if quantity is an integer greater than zero. It can be 
 // an integer, a float, or a fraction
 function validateQuantity(number){
-  let reg = /(\d+.*\d)|(\d+\/\d+) /;
+  let reg = /(\d+.?\d*)|(\d+\/\d+) /;
   return (reg.test(number));
 }
 
@@ -37,7 +43,7 @@ function addIngredient(){
   button.id = "delete-" + counter;
   button.setAttribute("onclick", "deleteIngredient(this)");
 
-  // Create flex container to hold button and paragragh in same line
+  // Create flex container to hold button and paragraph in same line
   let container = document.createElement("div");
   container.classList.add("wraper");
   container.classList.add("inline-flex");
@@ -46,13 +52,31 @@ function addIngredient(){
   // Create text input to hold quantity and ingredient information
   let tag = document.createElement("INPUT");
   tag.setAttribute("type", "text");
-  tag.setAttribute("readOnly", "true");
   tag.setAttribute("name", 'ingredient' + counter);
-  
+  tag.id = 'ingredient' + counter;
+  tag.addEventListener('blur', (e) => {
+    if( !e ) e = window.event; 
+    target = e.target||e.srcElement;
+    if (target.value.trim() === ""){
+      deleteIngredient(target);
+    }   
+  });
+  tag.addEventListener('keydown', (evt) => {
+      if (evt.which === 13) {
+          evt.preventDefault();
+          evt.stopPropagation();
+          return false;
+      }
+  });
+
   // Form has the ingredient name
   if (ingredient_value !== ''){
+    // If there is a decimal point without decimal numbers, remove it.
+    if (quantity_value.indexOf(".") == (quantity_value.length - 1)){
+      quantity_value = quantity_value.slice(0, -1)
+    }
     // Fill ingredient info
-    if (validateQuantity(quantity_value) && ingredient_value !== ''){
+    if (validateQuantity(quantity_value)){
       tag.defaultValue = quantity_value + ' ' + ingredient_value;
     }
     else{
@@ -116,6 +140,7 @@ function addRecipeName(){
   // Get recipe's name from previous element
   let recipe = document.getElementById('recipe-name');
   if (recipe.value == '') {
+    alert("Please give a name to your recipe")
     recipe.focus()
     return false;
   }
