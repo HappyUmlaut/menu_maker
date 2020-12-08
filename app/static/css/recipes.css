@@ -1,15 +1,11 @@
 .recipe-wraper{
-  display: flex;
-  margin: 10px auto;
-  width: 50%;
-  padding-left: 3%;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: flex-start;
+  display: inline-block;
+  margin: 10px 10px;
+  width: auto;
   align-items: center;
-  border: rgba(0, 0, 0, 0.699) 1px solid;
-  border-radius: 10px;
-  box-shadow: -3px 3px 2px 1px black;
+  padding: 0 3%;
+  border: #8f8f80 1px solid;
+  background-color: #b7b7a4;
 }
 
 .recipe-image{
@@ -27,9 +23,13 @@
   justify-content: center;
 }
 
+.recipe{
+  margin: 0 0;
+}
+
 #recipes-list{
-  padding-left: 3vw;
-  width: 100vw;
+  margin: 0 auto;
+  width: max-content;
   min-width: 180px;
 }
 

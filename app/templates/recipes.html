@@ -15,27 +15,27 @@
       </button>
     </form>
   </div>
-  {% if recipes and recipe_images %}
+
+  {% if recipes and current_user.is_authenticated %}
     <div id="recipes-list">
-    {% for recipe, ingredients in recipes.items() %}
+    {% for recipe in recipes %}
       <div class="recipe-wraper">
-        <img class="recipe-image" src="{{url_for('static', filename = recipe_images[loop.index0][0])}}" alt="Placeholder">
         <p class="h2">
           {{ recipe }}
         </p>
       </div>
     {% endfor %}
     </div>
-  {% elif recipes and not recipe_images %}
+  {% elif session['recipes'] %}
     <div id="recipes-list">
-    {% for recipe in recipes %}
-      <div class="recipe-wraper">
-        <p class="h2">
-          {{ recipe['name'] }}
-        </p>
-      </div>
-    {% endfor %}
+      <ul>
+        {% for recipe in session['recipes'] %}
+            <li class="recipe h2">
+              {{ recipe['name'] }}
+            </li>
+        {% endfor %}
+      </ul>
     </div>
-
   {% endif %}
+
 {% endblock %}

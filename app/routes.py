@@ -1,7 +1,7 @@
 from app import app
 from app import db
 from flask_login import current_user, login_user, logout_user
-from app.models import User, Ingredient, Recipe, RecipePicture, Menu
+from app.models import User, Ingredient, Recipe, Menu
 from flask import redirect, flash, url_for, render_template, request, session
 from app.forms import LoginForm, RegistrationForm
 from sys import stderr
@@ -77,13 +77,13 @@ def new_menu():
                     continue
 
                 # Get data for every recipe in the curren menu being iterated
-                name, image = db.session.query(Recipe.name, RecipePicture.filename).join(RecipePicture).filter(Recipe.id == recipe_id).all()[0]
+                name = db.session.query(Recipe.name).filter(Recipe.id == recipe_id).all()[0]
 
                 # Since it is a dictionary, identical names will overwrite. Add a space to indicate 'repeated'
                 while name in current_menu:
                     name = name + ' '
                 
-                current_menu[name] = image
+                # current_menu[name] = image
                     
             # Add current menu to full list of menus
             menus.append(current_menu)
@@ -140,32 +140,32 @@ def new_recipe():
                 db.session.add(next_ingredient)
 
             # Check if an image was uploaded
-            if 'image' in request.files and request.files['image'].filename != '':
-                file = request.files['image']
-                filename, extension = file.filename.split('.')
-                file.filename = recipe_name + '_user-' + username + '.' + extension
+            # if 'image' in request.files and request.files['image'].filename != '':
+            #     file = request.files['image']
+            #     filename, extension = file.filename.split('.')
+            #     file.filename = recipe_name + '_user-' + username + '.' + extension
 
-                # Create a secure filename
-                filename = secure_filename(file.filename)
+            #     # Create a secure filename
+            #     filename = secure_filename(file.filename)
 
-                # Check if user directory for images exist. If not, create it
-                if not os.path.isdir('app/static/images/recipe_images/' + username):
-                    os.mkdir('app/static/images/recipe_images/' + username)
+                # # Check if user directory for images exist. If not, create it
+                # if not os.path.isdir('app/static/images/recipe_images/' + username):
+                #     os.mkdir('app/static/images/recipe_images/' + username)
 
-                # Save image
-                file.save(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], username + '/'), filename))
+                # # Save image
+                # file.save(os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], username + '/'), filename))
 
-                # Add image location to database
-                file_location = '/images/recipe_images/' + username + '/' + filename
+                # # Add image location to database
+                # file_location = '/images/recipe_images/' + username + '/' + filename
 
-                # Add image to database
-                image = RecipePicture(recipe = recipe, filename = file_location)
+                # # Add image to database
+                # image = RecipePicture(recipe = recipe, filename = file_location)
 
-            else:
-                file_location = '/images/recipe_images/image-placeholder.png'
-                image = RecipePicture(recipe = recipe, filename = file_location)
+            # else:
+                # file_location = '/images/recipe_images/image-placeholder.png'
+                # image = RecipePicture(recipe = recipe, filename = file_location)
 
-            db.session.add(image)
+            # db.session.add(image)
 
             # Commit session to database
             db.session.commit()
@@ -213,15 +213,15 @@ def show_recipes():
 
         # Create dictionary to hold all ingredients for each recipe
         full_recipes = {}
-        recipe_images = []
+        # recipe_images = []
         # Since query returns a named tuple, unpack tuple in for loop to use recipe name directly
         for recipe, in recipes:
             full_recipes[recipe] = db.session.query(Ingredient.quantity, Ingredient.name).filter(Ingredient.recipe_id.in_(db.session.query(Recipe.id).filter(Recipe.name==recipe))).all()[0]
 
              # Get image for recipe
-            recipe_images.append(db.session.query(RecipePicture.filename).filter(RecipePicture.recipe_id.in_(db.session.query(Recipe.id).filter(Recipe.name==recipe).filter(Recipe.user_id==user_id))).all()[0])
+            # recipe_images.append(db.session.query(RecipePicture.filename).filter(RecipePicture.recipe_id.in_(db.session.query(Recipe.id).filter(Recipe.name==recipe).filter(Recipe.user_id==user_id))).all()[0])
 
-        return render_template('recipes.html', recipes=full_recipes, recipe_images = recipe_images)
+        return render_template('recipes.html', recipes=full_recipes)
     else:
         if 'recipes' not in session:
             session['recipes'] = []
